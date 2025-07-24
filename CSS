@@ -1,0 +1,109 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+}
+
+body {
+  background-image: url('https://images.unsplash.com/photo-1548095115-45697e5f12b1');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  color: white;
+  height: 100vh;
+}
+
+.container {
+  background-color: rgba(0, 0, 0, 0.7);
+  min-height: 100vh;
+  padding: 20px;
+  text-align: center;
+}
+
+header h1 {
+  font-size: 48px;
+  margin-bottom: 10px;
+}
+
+header p {
+  font-size: 20px;
+  margin-bottom: 40px;
+}
+
+.button-group {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  max-width: 300px;
+  margin: auto;
+}
+
+.btn {
+  padding: 15px;
+  border: none;
+  border-radius: 10px;
+  font-size: 18px;
+  color: white;
+  cursor: pointer;
+  text-decoration: none;
+  transition: 0.3s;
+}
+
+.telegram {
+  background-color: #229ED9;
+}
+.telegram:hover {
+  background-color: #1A8DBB;
+}
+
+.instagram {
+  background-color: #E1306C;
+}
+.instagram:hover {
+  background-color: #C32A5C;
+}
+
+.register {
+  background-color: #4CAF50;
+}
+.register:hover {
+  background-color: #3e8e41;
+}
+
+.form {
+  background-color: rgba(255, 255, 255, 0.1);
+  margin-top: 30px;
+  padding: 20px;
+  border-radius: 10px;
+  max-width: 400px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.form input,
+.form textarea {
+  width: 90%;
+  padding: 12px;
+  margin: 10px 0;
+  border-radius: 6px;
+  border: none;
+  font-size: 16px;
+}
+
+.submit {
+  background-color: #2196F3;
+}
+.submit:hover {
+  background-color: #0f6cd8;
+}
+
+footer {
+  margin-top: 50px;
+  font-size: 14px;
+  opacity: 0.7;
+}
+
+.hidden {
+  display: none;
+}
