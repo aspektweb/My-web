@@ -1,0 +1,153 @@
+<!DOCTYPE html><html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sakura Ramen Menu</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }body {
+  background: linear-gradient(to bottom, #ffffff, #f2f2f2);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+.background-grid {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-image: linear-gradient(#e0e0e0 1px, transparent 1px),
+                    linear-gradient(90deg, #e0e0e0 1px, transparent 1px);
+  background-size: 50px 50px;
+  z-index: 0;
+}
+
+.menu-wrapper {
+  position: relative;
+  width: 500px;
+  height: 500px;
+  background: rgba(255, 255, 255, 0.85);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: transform 2s ease;
+}
+
+.menu-wrapper.rotate {
+  transform: rotate(360deg);
+}
+
+.center-label {
+  position: absolute;
+  text-align: center;
+  color: #333;
+}
+
+.center-label h1 {
+  font-size: 32px;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.center-label button {
+  padding: 10px 20px;
+  background: black;
+  color: white;
+  border: none;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.center-label button:hover {
+  background: #ff5252;
+}
+
+.menu-item {
+  position: absolute;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: white;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: transform 0.4s;
+}
+
+.menu-item img {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.menu-item:nth-child(1) { top: 10%; left: 50%; transform: translate(-50%, -50%); }
+.menu-item:nth-child(2) { top: 50%; left: 90%; transform: translate(-50%, -50%); }
+.menu-item:nth-child(3) { top: 90%; left: 50%; transform: translate(-50%, -50%); }
+.menu-item:nth-child(4) { top: 50%; left: 10%; transform: translate(-50%, -50%); }
+
+.top-bar {
+  position: absolute;
+  top: 20px;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 40px;
+  z-index: 10;
+  color: #333;
+}
+
+.top-bar .tags button {
+  background: #f0f0f0;
+  border: none;
+  padding: 5px 12px;
+  margin-left: 10px;
+  border-radius: 20px;
+  cursor: pointer;
+}
+
+.footer {
+  position: absolute;
+  bottom: 20px;
+  font-size: 12px;
+  color: #666;
+}
+
+  </style>
+</head>
+<body>  <div class="background-grid"></div>  <div class="top-bar">
+    <div><strong>ui/ux rusty</strong></div>
+    <div class="tags">
+      <button>TUTORIEL</button>
+      <button>FIGMA</button>
+      <button>FABLE</button>
+      <button>TEMPLATE</button>
+    </div>
+  </div>  <div class="menu-wrapper" id="menu">
+    <div class="menu-item"><img src="https://i.ibb.co/gygMLmn/ramen1.png" alt="ramen"></div>
+    <div class="menu-item"><img src="https://i.ibb.co/DznNFp7/ramen2.png" alt="ramen2"></div>
+    <div class="menu-item"><img src="https://i.ibb.co/5nWr9D4/ramen3.png" alt="ramen3"></div>
+    <div class="menu-item"><img src="https://i.ibb.co/ZxLz6Zy/ramen4.png" alt="ramen4"></div>
+    <div class="center-label">
+      <h1>Sakura</h1>
+      <button onclick="alert('Reservation Clicked')">Find a reservation</button>
+    </div>
+  </div>  <div class="footer">
+    &copy; 2024 All rights reserved
+  </div>  <script>
+    const menu = document.getElementById('menu');
+    menu.addEventListener('click', () => {
+      menu.classList.toggle('rotate');
+    });
+  </script></body>
+</html>
