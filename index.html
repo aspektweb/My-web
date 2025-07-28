@@ -1,315 +1,291 @@
-<!DOCTYPE html><html lang="en">
+<!DOCTYPE html>
+<html lang="uz">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sakura Ramen Menu 3D</title>
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }body {
-  background: linear-gradient(to bottom, #ffffff, #f2f2f2);
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  overflow: hidden;
-  perspective: 1000px;
-}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Global Cargo Solutions - Bosh Sahifa</title> <meta name="description" content="Logistika xizmatlari bo'yicha ishonchli hamkor. Yuklarni tez, xavfsiz va samarali yetkazib beramiz: avtomobil, havo, dengiz, temir yo'l tashishlari, omborxona va bojxona xizmatlari.">
+    <meta name="keywords" content="logistika, yuk tashish, avtomobil yuk, havo yuk, dengiz yuk, temir yo'l yuk, omborxona, bojxona, cargo, transport, kuzatuv, tashkent, uzbekistan">
+    <meta name="author" content="Sizning ismingiz / Kompaniya nomi">
 
-.background-grid {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  background-image: linear-gradient(#e0e0e0 1px, transparent 1px),
-                    linear-gradient(90deg, #e0e0e0 1px, transparent 1px);
-  background-size: 50px 50px;
-  z-index: 0;
-}
+    <link rel="stylesheet" href="css/style.css">
 
-.menu-wrapper {
-  position: relative;
-  width: 500px;
-  height: 500px;
-  background: rgba(255, 255, 255, 0.85);
-  box-shadow: 0 30px 100px rgba(0,0,0,0.25);
-  border-radius: 50%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  transition: transform 2s ease, box-shadow 0.5s;
-  transform-style: preserve-3d;
-}
-
-.menu-wrapper.rotate {
-  transform: rotateY(360deg);
-}
-
-.menu-wrapper:hover {
-  box-shadow: 0 50px 120px rgba(0,0,0,0.4);
-  transform: rotateX(10deg) rotateY(10deg);
-}
-
-.center-label {
-  position: absolute;
-  text-align: center;
-  color: #333;
-  transform: translateZ(50px);
-}
-
-.center-label h1 {
-  font-size: 32px;
-  font-weight: 600;
-  margin-bottom: 10px;
-}
-
-.center-label button {
-  padding: 10px 20px;
-  background: black;
-  color: white;
-  border: none;
-  border-radius: 30px;
-  cursor: pointer;
-  transition: background 0.3s ease;
-}
-
-.center-label button:hover {
-  background: #ff5252;
-}
-
-.menu-item {
-  position: absolute;
-  width: 120px;
-  height: 120px;
-  border-radius: 50%;
-  background: white;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  transition: transform 0.4s;
-  transform-style: preserve-3d;
-}
-
-.menu-item img {
-  width: 90px;
-  height: 90px;
-  border-radius: 50%;
-  object-fit: cover;
-  transform: translateZ(20px);
-}
-
-.menu-item:nth-child(1) { top: 10%; left: 50%; transform: translate(-50%, -50%) translateZ(30px); }
-.menu-item:nth-child(2) { top: 50%; left: 90%; transform: translate(-50%, -50%) translateZ(30px); }
-.menu-item:nth-child(3) { top: 90%; left: 50%; transform: translate(-50%, -50%) translateZ(30px); }
-.menu-item:nth-child(4) { top: 50%; left: 10%; transform: translate(-50%, -50%) translateZ(30px); }
-
-.top-bar {
-  position: absolute;
-  top: 20px;
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  padding: 0 40px;
-  z-index: 10;
-  color: #333;
-}
-
-.top-bar .tags button {
-  background: #f0f0f0;
-  border: none;
-  padding: 5px 12px;
-  margin-left: 10px;
-  border-radius: 20px;
-  cursor: pointer;
-}
-
-.footer {
-  position: absolute;
-  bottom: 20px;
-  font-size: 12px;
-  color: #666;
-}
-
-  </style>
+    <link rel="icon" type="image/png" href="images/favicon.png">
 </head>
-<body>  <div class="background-grid"></div>  <div class="top-bar">
-    <div><strong>ui/ux rusty</strong></div>
-    <div class="tags">
-      <button>TUTORIEL</button>
-      <button>FIGMA</button>
-      <button>FABLE</button>
-      <button>TEMPLATE</button>
-    </div>
-  </div>  <div class="menu-wrapper" id="menu">
-    <div class="menu-item"><img src="https://i.ibb.co/gygMLmn/ramen1.png" alt="ramen"></div>
-    <div class="menu-item"><img src="https://i.ibb.co/DznNFp7/ramen2.png" alt="ramen2"></div>
-    <div class="menu-item"><img src="https://i.ibb.co/5nWr9D4/ramen3.png" alt="ramen3"></div>
-    <div class="menu-item"><img src="https://i.ibb.co/ZxLz6Zy/ramen4.png" alt="ramen4"></div>
-    <div class="center-label">
-      <h1>Sakura</h1>
-      <button onclick="alert('Reservation Clicked')">Find a reservation</button>
-    </div>
-  </div>  <div class="footer">
-    &copy; 2024 All rights reserved
-  </div>  <script>
-    const menu = document.getElementById('menu');
-    menu.addEventListener('click', () => {
-      menu.classList.toggle('rotate');
-    });
-  </script></body>
-</html><!DOCTYPE html><html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sakura Ramen Menu</title>
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }body {
-  background: linear-gradient(to bottom, #ffffff, #f2f2f2);
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  overflow: hidden;
-}
+<body>
 
-.background-grid {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  background-image: linear-gradient(#e0e0e0 1px, transparent 1px),
-                    linear-gradient(90deg, #e0e0e0 1px, transparent 1px);
-  background-size: 50px 50px;
-  z-index: 0;
-}
+    <header class="main-header">
+        <div class="container">
+            <div class="header-top">
+                <div class="contact-info">
+                    <span><i class="fas fa-phone"></i> +998 (xx) xxx-xx-xx</span>
+                    <span><i class="fas fa-envelope"></i> info@globalcargo.uz</span>
+                </div>
+                <div class="header-actions">
+                    <a href="login.html" class="btn-login">Kirish / Ro'yxatdan o'tish</a>
+                    <div class="language-switcher">
+                        <a href="?lang=uz" class="active">UZ</a> |
+                        <a href="?lang=ru">RU</a> |
+                        <a href="?lang=en">EN</a>
+                    </div>
+                </div>
+            </div>
+            <nav class="navbar">
+                <a href="index.html" class="logo">
+                    <img src="images/logo.png" alt="Global Cargo Solutions Logotipi">
+                </a>
+                <ul class="nav-links">
+                    <li><a href="index.html">Bosh sahifa</a></li>
+                    <li><a href="about.html">Biz haqimizda</a></li>
+                    <li class="dropdown">
+                        <a href="services.html" class="dropbtn">Xizmatlar <i class="fas fa-caret-down"></i></a>
+                        <div class="dropdown-content">
+                            <a href="services/road-freight.html">Avtomobil tashish</a>
+                            <a href="services/air-freight.html">Havo tashish</a>
+                            <a href="services/sea-freight.html">Dengiz tashish</a>
+                            <a href="services/rail-freight.html">Temir yo'l tashish</a>
+                            <a href="services/warehousing.html">Omborxona xizmatlari</a>
+                            <a href="services/customs-brokerage.html">Bojxona brokerlik</a>
+                        </div>
+                    </li>
+                    <li><a href="tracking.html">Yuk kuzatuvi</a></li>
+                    <li><a href="quote.html">Narx hisoblash</a></li>
+                    <li><a href="blog.html">Yangiliklar & Blog</a></li>
+                    <li><a href="contact.html">Bog'lanish</a></li>
+                </ul>
+                <button class="mobile-menu-toggle"><i class="fas fa-bars"></i></button>
+            </nav>
+        </div>
+    </header>
 
-.menu-wrapper {
-  position: relative;
-  width: 500px;
-  height: 500px;
-  background: rgba(255, 255, 255, 0.85);
-  box-shadow: 0 20px 60px rgba(0,0,0,0.15);
-  border-radius: 50%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  transition: transform 2s ease;
-}
+    <main>
+        <section id="hero-section" class="hero-section">
+            <div class="container">
+                <div class="hero-content">
+                    <h1>Sizning Global Logistika Hamkoringiz</h1>
+                    <p>Yuklaringizni butun dunyo bo'ylab tez, xavfsiz va eng samarali yo'llar bilan yetkazib beramiz. Har bir mijozga individual yondashuv.</p>
+                    <a href="quote.html" class="btn btn-primary">Narx so'rash</a>
+                    <a href="services.html" class="btn btn-secondary">Xizmatlarimiz</a>
+                </div>
+            </div>
+        </section>
 
-.menu-wrapper.rotate {
-  transform: rotate(360deg);
-}
+        <section id="our-services" class="services-overview-section">
+            <div class="container">
+                <h2>Asosiy Xizmatlarimiz</h2>
+                <p class="section-description">Biz sizga yuk tashishning barcha turlarida professional yordam beramiz.</p>
+                <div class="service-cards-grid">
+                    <div class="service-card">
+                        <img src="images/icon-road-freight.png" alt="Avtomobil tashish ikonasi">
+                        <h3>Avtomobil tashish</h3>
+                        <p>Yevropa, Osiyo va MDH bo'ylab tezkor avtomobil yuk tashish xizmatlari.</p>
+                        <a href="services/road-freight.html" class="learn-more-link">Batafsil <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                    <div class="service-card">
+                        <img src="images/icon-air-freight.png" alt="Havo tashish ikonasi">
+                        <h3>Havo tashish</h3>
+                        <p>Qisqa muddatlarda butun dunyo bo'ylab havo transportida yuk tashish.</p>
+                        <a href="services/air-freight.html" class="learn-more-link">Batafsil <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                    <div class="service-card">
+                        <img src="images/icon-sea-freight.png" alt="Dengiz tashish ikonasi">
+                        <h3>Dengiz tashish</h3>
+                        <p>Katta hajmdagi yuklar uchun iqtisodiy va ishonchli dengiz transporti.</p>
+                        <a href="services/sea-freight.html" class="learn-more-link">Batafsil <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                    <div class="service-card">
+                        <img src="images/icon-warehousing.png" alt="Omborxona ikonasi">
+                        <h3>Omborxona xizmatlari</h3>
+                        <p>Zamonaviy omborlarda yuklaringizni xavfsiz saqlash va boshqarish.</p>
+                        <a href="services/warehousing.html" class="learn-more-link">Batafsil <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-.center-label {
-  position: absolute;
-  text-align: center;
-  color: #333;
-}
+        <section id="why-choose-us" class="why-choose-us-section">
+            <div class="container">
+                <h2>Nima uchun Global Cargo Solutions?</h2>
+                <div class="advantages-grid">
+                    <div class="advantage-item">
+                        <i class="fas fa-shield-alt"></i>
+                        <h3>Ishonchlilik va xavfsizlik</h3>
+                        <p>Yuklaringizning xavfsizligi va butunligi bizning ustuvor vazifamizdir.</p>
+                    </div>
+                    <div class="advantage-item">
+                        <i class="fas fa-globe"></i>
+                        <h3>Keng geografiya</h3>
+                        <p>Dunyoning istalgan nuqtasiga yetkazib berish imkoniyati.</p>
+                    </div>
+                    <div class="advantage-item">
+                        <i class="fas fa-handshake"></i>
+                        <h3>Individual yondashuv</h3>
+                        <p>Har bir mijoz uchun optimal va moslashtirilgan yechimlar.</p>
+                    </div>
+                    <div class="advantage-item">
+                        <i class="fas fa-clock"></i>
+                        <h3>O'z vaqtida yetkazish</h3>
+                        <p>Kelishilgan muddatlarda yuklarni manziliga yetkazish.</p>
+                    </div>
+                    <div class="advantage-item">
+                        <i class="fas fa-headset"></i>
+                        <h3>24/7 Qo'llab-quvvatlash</h3>
+                        <p>Istagan vaqtingizda mutaxassislarimiz yordamga shay.</p>
+                    </div>
+                    <div class="advantage-item">
+                        <i class="fas fa-chart-line"></i>
+                        <h3>Shaffof narxlar</h3>
+                        <p>Yashirin to'lovlarsiz, aniq va tushunarli narxlar.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-.center-label h1 {
-  font-size: 32px;
-  font-weight: 600;
-  margin-bottom: 10px;
-}
+        <section id="tracking-section" class="tracking-section">
+            <div class="container">
+                <h2>Yukingizni real vaqtda kuzating</h2>
+                <form action="/track" method="POST" class="tracking-form">
+                    <input type="text" id="tracking-number" name="tracking_number" placeholder="Kuzatuv raqamini kiriting..." required>
+                    <button type="submit" class="btn btn-primary">Kuzatish</button>
+                </form>
+                <div id="tracking-results">
+                    <p>Yukingiz qayerda ekanligini bilish uchun kuzatuv raqamingizni kiriting.</p>
+                </div>
+            </div>
+        </section>
 
-.center-label button {
-  padding: 10px 20px;
-  background: black;
-  color: white;
-  border: none;
-  border-radius: 30px;
-  cursor: pointer;
-  transition: background 0.3s ease;
-}
+        <section id="latest-news" class="latest-news-section">
+            <div class="container">
+                <h2>So'nggi Yangiliklar va Blog</h2>
+                <div class="news-cards-grid">
+                    <div class="news-card">
+                        <img src="images/news1.jpg" alt="Yangilik 1 rasmi">
+                        <h3><a href="blog/news-article-1.html">Yangi Xalqaro Yo'nalishlarning Ochilishi</a></h3>
+                        <p class="news-date">2025-07-28</p>
+                        <p>Komapaniyamiz Yevropa va Osiyo o'rtasida yangi savdo yo'nalishlarini ishga tushirdi...</p>
+                    </div>
+                    <div class="news-card">
+                        <img src="images/news2.jpg" alt="Yangilik 2 rasmi">
+                        <h3><a href="blog/news-article-2.html">Omborxona Imkoniyatlarining Kengayishi</a></h3>
+                        <p class="news-date">2025-07-20</p>
+                        <p>Toshkent shahridagi yangi omborimiz ishga tushirildi, bu xizmat sifatini oshiradi...</p>
+                    </div>
+                    <div class="news-card">
+                        <img src="images/news3.jpg" alt="Yangilik 3 rasmi">
+                        <h3><a href="blog/news-article-3.html">Logistika Sohasidagi So'nggi Trendlar</a></h3>
+                        <p class="news-date">2025-07-15</p>
+                        <p>2025-yilda logistika sanoatida qanday o'zgarishlar kutilmoqda? Batafsil blogimizda...</p>
+                    </div>
+                </div>
+                <div class="text-center">
+                    <a href="blog.html" class="btn btn-secondary">Barcha yangiliklar</a>
+                </div>
+            </div>
+        </section>
 
-.center-label button:hover {
-  background: #ff5252;
-}
+        <section id="testimonials" class="testimonials-section">
+            <div class="container">
+                <h2>Mijozlarimiz biz haqimizda</h2>
+                <div class="testimonial-carousel">
+                    <div class="testimonial-item">
+                        <p>"Global Cargo Solutions bilan ishlash juda qulay va samarali. Yuklarim har doim o'z vaqtida va xavfsiz yetib keladi. Yuqori sifatli xizmat!"</p>
+                        <h4>- Alisher Karimov, Ishbilarmon</h4>
+                    </div>
+                    <div class="testimonial-item">
+                        <p>"Mening kompaniyam uchun muhim yuklarni tashishda ularning professional yordami bebaho. Har doim aloqada bo'lishadi va har bir bosqich haqida ma'lumot berishadi."</p>
+                        <h4>- Nigora Saidova, Importchi</h4>
+                    </div>
+                    </div>
+            </div>
+        </section>
 
-.menu-item {
-  position: absolute;
-  width: 120px;
-  height: 120px;
-  border-radius: 50%;
-  background: white;
-  box-shadow: 0 5px 20px rgba(0,0,0,0.2);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  transition: transform 0.4s;
-}
+        <section id="faq" class="faq-section">
+            <div class="container">
+                <h2>Ko'p Beriladigan Savollar</h2>
+                <div class="faq-items">
+                    <div class="faq-item">
+                        <h3>Yuk tashish narxini qanday hisoblash mumkin?</h3>
+                        <p>Saytimizdagi "Narx hisoblash" bo'limida yukingiz parametrlari (og'irligi, hajmi, manzillar)ni kiritib, taxminiy narxni olishingiz mumkin. Aniq narx uchun biz bilan bog'laning.</p>
+                    </div>
+                    <div class="faq-item">
+                        <h3>Yukimni qanday kuzata olaman?</h3>
+                        <p>Sizga berilgan noyob kuzatuv raqamini saytimizdagi "Yuk kuzatuvi" bo'limiga kiritib, yukingizning joriy holatini bilishingiz mumkin.</p>
+                    </div>
+                    <div class="faq-item">
+                        <h3>Qanday yuk turlarini tashish mumkin?</h3>
+                        <p>Biz umumiy yuklar, xavfli yuklar, harorat rejimini talab qiladigan yuklar va boshqa turdagi yuklarni tashishda yordam beramiz. Batafsil ma'lumotni "Xizmatlar" bo'limida topasiz.</p>
+                    </div>
+                </div>
+                <div class="text-center">
+                    <a href="faq.html" class="btn btn-secondary">Barcha savollar</a>
+                </div>
+            </div>
+        </section>
 
-.menu-item img {
-  width: 90px;
-  height: 90px;
-  border-radius: 50%;
-  object-fit: cover;
-}
+        <section id="cta-contact" class="cta-contact-section">
+            <div class="container">
+                <h2>Global Cargo Solutions bilan aloqaga chiqing!</h2>
+                <p>Bizning mutaxassislarimiz sizning savollaringizga javob berishga va eng yaxshi logistika yechimlarini taklif qilishga tayyor.</p>
+                <a href="contact.html" class="btn btn-primary">Biz bilan bog'lanish</a>
+            </div>
+        </section>
 
-.menu-item:nth-child(1) { top: 10%; left: 50%; transform: translate(-50%, -50%); }
-.menu-item:nth-child(2) { top: 50%; left: 90%; transform: translate(-50%, -50%); }
-.menu-item:nth-child(3) { top: 90%; left: 50%; transform: translate(-50%, -50%); }
-.menu-item:nth-child(4) { top: 50%; left: 10%; transform: translate(-50%, -50%); }
+    </main>
 
-.top-bar {
-  position: absolute;
-  top: 20px;
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  padding: 0 40px;
-  z-index: 10;
-  color: #333;
-}
+    <footer class="main-footer">
+        <div class="container">
+            <div class="footer-columns">
+                <div class="footer-col footer-about">
+                    <h3>Global Cargo Solutions</h3>
+                    <p>Bizning maqsadimiz – yuklaringizni o'z vaqtida va xavfsiz yetkazish. Ishonchli va professional logistika xizmatlari.</p>
+                    <div class="social-links">
+                        <a href="#" target="_blank"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" target="_blank"><i class="fab fa-telegram-plane"></i></a>
+                        <a href="#" target="_blank"><i class="fab fa-instagram"></i></a>
+                        <a href="#" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+                <div class="footer-col">
+                    <h3>Tezkor havolalar</h3>
+                    <ul>
+                        <li><a href="index.html">Bosh sahifa</a></li>
+                        <li><a href="about.html">Biz haqimizda</a></li>
+                        <li><a href="services.html">Xizmatlar</a></li>
+                        <li><a href="tracking.html">Yuk kuzatuvi</a></li>
+                        <li><a href="quote.html">Narx hisoblash</a></li>
+                        <li><a href="contact.html">Bog'lanish</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h3>Bizning xizmatlar</h3>
+                    <ul>
+                        <li><a href="services/road-freight.html">Avtomobil tashish</a></li>
+                        <li><a href="services/air-freight.html">Havo tashish</a></li>
+                        <li><a href="services/sea-freight.html">Dengiz tashish</a></li>
+                        <li><a href="services/rail-freight.html">Temir yo'l tashish</a></li>
+                        <li><a href="services/warehousing.html">Omborxona</a></li>
+                        <li><a href="services/customs-brokerage.html">Bojxona brokerlik</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col footer-contact">
+                    <h3>Bog'lanish</h3>
+                    <p><i class="fas fa-map-marker-alt"></i> Toshkent sh., Chilonzor tumani, Xalqlar Do'stligi ko'chasi 123</p>
+                    <p><i class="fas fa-phone"></i> +998 (xx) xxx-xx-xx</p>
+                    <p><i class="fas fa-envelope"></i> info@globalcargo.uz</p>
+                    <p><i class="fas fa-clock"></i> Dush-Shanba: 9:00 - 18:00</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 Global Cargo Solutions. Barcha huquqlar himoyalangan.</p>
+                <ul class="footer-utility-links">
+                    <li><a href="privacy.html">Maxfiylik siyosati</a></li>
+                    <li><a href="terms.html">Foydalanish shartlari</a></li>
+                </ul>
+            </div>
+        </div>
+    </footer>
 
-.top-bar .tags button {
-  background: #f0f0f0;
-  border: none;
-  padding: 5px 12px;
-  margin-left: 10px;
-  border-radius: 20px;
-  cursor: pointer;
-}
+    <script src="https://kit.fontawesome.com/your-font-awesome-kit-code.js" crossorigin="anonymous"></script>
+    <script src="js/script.js"></script>
 
-.footer {
-  position: absolute;
-  bottom: 20px;
-  font-size: 12px;
-  color: #666;
-}
-
-  </style>
-</head>
-<body>  <div class="background-grid"></div>  <div class="top-bar">
-    <div><strong>ui/ux rusty</strong></div>
-    <div class="tags">
-      <button>TUTORIEL</button>
-      <button>FIGMA</button>
-      <button>FABLE</button>
-      <button>TEMPLATE</button>
-    </div>
-  </div>  <div class="menu-wrapper" id="menu">
-    <div class="menu-item"><img src="https://i.ibb.co/gygMLmn/ramen1.png" alt="ramen"></div>
-    <div class="menu-item"><img src="https://i.ibb.co/DznNFp7/ramen2.png" alt="ramen2"></div>
-    <div class="menu-item"><img src="https://i.ibb.co/5nWr9D4/ramen3.png" alt="ramen3"></div>
-    <div class="menu-item"><img src="https://i.ibb.co/ZxLz6Zy/ramen4.png" alt="ramen4"></div>
-    <div class="center-label">
-      <h1>Sakura</h1>
-      <button onclick="alert('Reservation Clicked')">Find a reservation</button>
-    </div>
-  </div>  <div class="footer">
-    &copy; 2024 All rights reserved
-  </div>  <script>
-    const menu = document.getElementById('menu');
-    menu.addEventListener('click', () => {
-      menu.classList.toggle('rotate');
-    });
-  </script></body>
+</body>
 </html>
