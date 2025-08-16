@@ -3,360 +3,416 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bizning Do'kon - Barcha Mahsulotlar Bir Joyda</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>Online Shaxmat O'yini</title>
     <style>
-        /* Custom CSS for animations */
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
-        
-        .fade-in {
-            animation: fadeIn 0.5s ease-out forwards;
+
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #1a2a6c);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
         }
-        
-        .product-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            padding: 30px;
+            width: 100%;
+            max-width: 800px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
-        
-        .product-card {
+
+        h1 {
+            color: white;
+            margin-bottom: 20px;
+            font-size: 2.5rem;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .game-info {
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 25px;
+            color: white;
+        }
+
+        .player-info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+
+        .player {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 15px;
+            border-radius: 10px;
+            flex: 1;
+            margin: 0 10px;
+        }
+
+        .player.active {
+            background: rgba(255, 215, 0, 0.3);
+            border: 2px solid gold;
+        }
+
+        .player h3 {
+            margin-bottom: 10px;
+            color: gold;
+        }
+
+        .chessboard {
+            display: grid;
+            grid-template-columns: repeat(8, 1fr);
+            grid-template-rows: repeat(8, 1fr);
+            width: 480px;
+            height: 480px;
+            margin: 0 auto 25px;
+            border: 3px solid #8B4513;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .square {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 40px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .square.light {
+            background-color: #F0D9B5;
+        }
+
+        .square.dark {
+            background-color: #B58863;
+        }
+
+        .square.selected {
+            background-color: #FFD700;
+        }
+
+        .square.valid-move {
+            position: relative;
+        }
+
+        .square.valid-move::after {
+            content: "";
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background-color: rgba(0, 255, 0, 0.5);
+            border-radius: 50%;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        button {
+            background: linear-gradient(45deg, #FFD700, #FFA500);
+            border: none;
+            padding: 12px 25px;
+            border-radius: 50px;
+            color: #8B4513;
+            font-weight: bold;
+            cursor: pointer;
             transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
         }
-        
-        .cart-item-enter {
-            opacity: 0;
-            transform: translateX(-20px);
+
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
         }
-        
-        .cart-item-enter-active {
-            opacity: 1;
-            transform: translateX(0);
-            transition: all 0.3s ease;
+
+        button:active {
+            transform: translateY(1px);
         }
-        
-        .cart-item-exit {
-            opacity: 1;
-            transform: translateX(0);
+
+        .game-status {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 15px;
+            border-radius: 10px;
+            color: white;
+            font-size: 1.2rem;
+            margin-top: 20px;
         }
-        
-        .cart-item-exit-active {
-            opacity: 0;
-            transform: translateX(20px);
-            transition: all 0.3s ease;
+
+        .online-players {
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 25px;
+            color: white;
         }
-        
-        /* Custom scrollbar */
-        ::-webkit-scrollbar {
-            width: 8px;
+
+        .players-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 10px;
+            margin-top: 15px;
         }
-        
-        ::-webkit-scrollbar-track {
-            background: #f1f1f1;
+
+        .player-item {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 10px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
         }
-        
-        ::-webkit-scrollbar-thumb {
-            background: #888;
-            border-radius: 4px;
+
+        .player-item.online::before {
+            content: "●";
+            color: #00ff00;
+            margin-right: 8px;
         }
-        
-        ::-webkit-scrollbar-thumb:hover {
-            background: #555;
+
+        @media (max-width: 600px) {
+            .chessboard {
+                width: 320px;
+                height: 320px;
+            }
+
+            .square {
+                font-size: 25px;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            .container {
+                padding: 20px;
+            }
         }
     </style>
 </head>
-<body class="bg-gray-50 font-sans">
-    <!-- Navigation -->
-    <nav class="bg-white shadow-lg sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-4">
-            <div class="flex justify-between items-center h-16">
-                <div class="flex items-center">
-                    <a href="#" class="text-2xl font-bold text-indigo-600">Bizning Do'kon</a>
+<body>
+    <div class="container">
+        <h1>♔ Online Shaxmat O'yini ♔</h1>
+        
+        <div class="game-info">
+            <div class="player-info">
+                <div class="player active" id="player1">
+                    <h3>O'yinchi 1 (Oq)</h3>
+                    <p>Siz</p>
                 </div>
-                <div class="hidden md:flex items-center space-x-8">
-                    <a href="#home" class="text-gray-700 hover:text-indigo-600 transition">Bosh Sahifa</a>
-                    <a href="#products" class="text-gray-700 hover:text-indigo-600 transition">Mahsulotlar</a>
-                    <a href="#about" class="text-gray-700 hover:text-indigo-600 transition">Biz Haqimizda</a>
-                    <a href="#contact" class="text-gray-700 hover:text-indigo-600 transition">Aloqa</a>
-                </div>
-                <div class="flex items-center space-x-4">
-                    <button id="cart-btn" class="relative p-2 text-gray-700 hover:text-indigo-600">
-                        <i class="fas fa-shopping-cart text-xl"></i>
-                        <span id="cart-count" class="absolute -top-1 -right-1 bg-indigo-600 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">0</span>
-                    </button>
-                    <button id="auth-btn" class="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 transition">
-                        Kirish
-                    </button>
-                    <button class="md:hidden p-2 text-gray-700" id="mobile-menu-btn">
-                        <i class="fas fa-bars text-xl"></i>
-                    </button>
+                <div class="player" id="player2">
+                    <h3>O'yinchi 2 (Qora)</h3>
+                    <p>Raqib</p>
                 </div>
             </div>
         </div>
-        <!-- Mobile menu -->
-        <div class="md:hidden hidden bg-white border-t" id="mobile-menu">
-            <div class="px-4 py-3 space-y-2">
-                <a href="#home" class="block text-gray-700 hover:text-indigo-600 transition">Bosh Sahifa</a>
-                <a href="#products" class="block text-gray-700 hover:text-indigo-600 transition">Mahsulotlar</a>
-                <a href="#about" class="block text-gray-700 hover:text-indigo-600 transition">Biz Haqimizda</a>
-                <a href="#contact" class="block text-gray-700 hover:text-indigo-600 transition">Aloqa</a>
-            </div>
-        </div>
-    </nav>
 
-    <!-- Hero Section -->
-    <section id="home" class="bg-gradient-to-r from-indigo-500 to-purple-600 text-white py-20">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="md:flex items-center justify-between">
-                <div class="md:w-1/2 mb-10 md:mb-0 fade-in">
-                    <h1 class="text-4xl md:text-5xl font-bold mb-4">Bizning Do'konga Xush Kelibsiz!</h1>
-                    <p class="text-xl mb-8">Barcha kerakli mahsulotlarni bir joyda topishingiz mumkin. Sifatli mahsulotlar va tez yetkazib berish!</p>
-                    <div class="flex space-x-4">
-                        <a href="#products" class="bg-white text-indigo-600 px-6 py-3 rounded-md font-medium hover:bg-gray-100 transition">Mahsulotlarni Ko'rish</a>
-                        <a href="#register" class="border-2 border-white text-white px-6 py-3 rounded-md font-medium hover:bg-white hover:text-indigo-600 transition">Ro'yxatdan O'tish</a>
-                    </div>
-                </div>
-                <div class="md:w-1/2 fade-in" style="animation-delay: 0.2s;">
-                    <img src="https://images.unsplash.com/photo-1555529669-e69e7aa0ba9a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" alt="Shopping" class="rounded-lg shadow-xl w-full h-auto">
-                </div>
+        <div class="chessboard" id="chessboard"></div>
+
+        <div class="controls">
+            <button id="newGame">Yangi O'yin</button>
+            <button id="undoMove">Ortga Qaytarish</button>
+            <button id="resign">Taslim Bo'lish</button>
+        </div>
+
+        <div class="game-status" id="gameStatus">
+            O'yin davom etmoqda... Oq yuradi
+        </div>
+
+        <div class="online-players">
+            <h3>Online O'yinchilar</h3>
+            <div class="players-list">
+                <div class="player-item online">Ali (Siz)</div>
+                <div class="player-item online">Vali</div>
+                <div class="player-item online">Hasan</div>
+                <div class="player-item">Husan</div>
             </div>
         </div>
-    </section>
+    </div>
 
-    <!-- Featured Categories -->
-    <section class="py-16 bg-white">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 class="text-3xl font-bold text-center mb-12">Kategoriyalar</h2>
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
-                <div class="bg-gray-100 rounded-lg p-6 text-center hover:bg-indigo-50 transition cursor-pointer">
-                    <div class="bg-indigo-100 w-16 h-16 mx-auto rounded-full flex items-center justify-center mb-4">
-                        <i class="fas fa-tshirt text-indigo-600 text-2xl"></i>
-                    </div>
-                    <h3 class="font-medium text-lg">Kiyimlar</h3>
-                </div>
-                <div class="bg-gray-100 rounded-lg p-6 text-center hover:bg-indigo-50 transition cursor-pointer">
-                    <div class="bg-indigo-100 w-16 h-16 mx-auto rounded-full flex items-center justify-center mb-4">
-                        <i class="fas fa-laptop text-indigo-600 text-2xl"></i>
-                    </div>
-                    <h3 class="font-medium text-lg">Elektronika</h3>
-                </div>
-                <div class="bg-gray-100 rounded-lg p-6 text-center hover:bg-indigo-50 transition cursor-pointer">
-                    <div class="bg-indigo-100 w-16 h-16 mx-auto rounded-full flex items-center justify-center mb-4">
-                        <i class="fas fa-home text-indigo-600 text-2xl"></i>
-                    </div>
-                    <h3 class="font-medium text-lg">Uy Jihozlari</h3>
-                </div>
-                <div class="bg-gray-100 rounded-lg p-6 text-center hover:bg-indigo-50 transition cursor-pointer">
-                    <div class="bg-indigo-100 w-16 h-16 mx-auto rounded-full flex items-center justify-center mb-4">
-                        <i class="fas fa-utensils text-indigo-600 text-2xl"></i>
-                    </div>
-                    <h3 class="font-medium text-lg">Oziq-ovqat</h3>
-                </div>
-            </div>
-        </div>
-    </section>
+    <script>
+        class ChessGame {
+            constructor() {
+                this.board = document.getElementById('chessboard');
+                this.status = document.getElementById('gameStatus');
+                this.selectedSquare = null;
+                this.currentPlayer = 'white';
+                this.gameActive = true;
+                this.initializeBoard();
+                this.setupEventListeners();
+            }
 
-    <!-- Products Section -->
-    <section id="products" class="py-16 bg-gray-50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center mb-8">
-                <h2 class="text-3xl font-bold">Mahsulotlar</h2>
-                <div class="flex space-x-2">
-                    <select class="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                        <option>Saralash</option>
-                        <option>Arzon</option>
-                        <option>Qimmat</option>
-                        <option>Yangi</option>
-                    </select>
-                    <input type="text" placeholder="Qidirish..." class="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                </div>
-            </div>
-            
-            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6" id="products-container">
-                <!-- Products will be loaded here by JavaScript -->
-            </div>
-            
-            <div class="mt-12 text-center">
-                <button class="bg-indigo-600 text-white px-6 py-3 rounded-md font-medium hover:bg-indigo-700 transition">
-                    Ko'proq Mahsulotlar
-                </button>
-            </div>
-        </div>
-    </section>
+            initializeBoard() {
+                this.board.innerHTML = '';
+                const initialSetup = [
+                    ['♜', '♞', '♝', '♛', '♚', '♝', '♞', '♜'],
+                    ['♟', '♟', '♟', '♟', '♟', '♟', '♟', '♟'],
+                    ['', '', '', '', '', '', '', ''],
+                    ['', '', '', '', '', '', '', ''],
+                    ['', '', '', '', '', '', '', ''],
+                    ['', '', '', '', '', '', '', ''],
+                    ['♙', '♙', '♙', '♙', '♙', '♙', '♙', '♙'],
+                    ['♖', '♘', '♗', '♕', '♔', '♗', '♘', '♖']
+                ];
 
-    <!-- About Section -->
-    <section id="about" class="py-16 bg-white">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="md:flex items-center">
-                <div class="md:w-1/2 mb-10 md:mb-0">
-                    <img src="https://images.unsplash.com/photo-1556740738-b6a63e27c4df?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" alt="About Us" class="rounded-lg shadow-xl w-full h-auto">
-                </div>
-                <div class="md:w-1/2 md:pl-12">
-                    <h2 class="text-3xl font-bold mb-6">Biz Haqimizda</h2>
-                    <p class="text-gray-700 mb-4">Bizning Do'kon 2010-yildan beri mijozlarga sifatli mahsulotlar va ajoyib xizmat ko'rsatib kelmoqda. Bizning maqsadimiz - har bir mijozning ehtiyojlarini qondirish va ularga eng yaxshi xarid tajribasini taqdim etish.</p>
-                    <p class="text-gray-700 mb-6">Biz faqat ishonchli yetkazib beruvchilar bilan hamkorlik qilamiz va barcha mahsulotlarimiz sifat nazoratidan o'tadi. Sizning ishonchingiz va mamnunligingiz - bizning eng katta g'ururimiz.</p>
-                    <div class="flex space-x-4">
-                        <div class="bg-indigo-100 p-4 rounded-lg">
-                            <h3 class="font-bold text-indigo-600 text-xl">10+</h3>
-                            <p class="text-gray-700">Yillik Tajriba</p>
-                        </div>
-                        <div class="bg-indigo-100 p-4 rounded-lg">
-                            <h3 class="font-bold text-indigo-600 text-xl">5000+</h3>
-                            <p class="text-gray-700">Mamnun Mijozlar</p>
-                        </div>
-                        <div class="bg-indigo-100 p-4 rounded-lg">
-                            <h3 class="font-bold text-indigo-600 text-xl">100+</h3>
-                            <p class="text-gray-700">Hamkorlar</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+                for (let row = 0; row < 8; row++) {
+                    for (let col = 0; col < 8; col++) {
+                        const square = document.createElement('div');
+                        square.className = `square ${(row + col) % 2 === 0 ? 'light' : 'dark'}`;
+                        square.dataset.row = row;
+                        square.dataset.col = col;
+                        square.textContent = initialSetup[row][col];
+                        this.board.appendChild(square);
+                    }
+                }
+            }
 
-    <!-- Testimonials -->
-    <section class="py-16 bg-gray-50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 class="text-3xl font-bold text-center mb-12">Mijozlar Fikrlari</h2>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div class="bg-white p-6 rounded-lg shadow-md">
-                    <div class="flex items-center mb-4">
-                        <div class="bg-indigo-100 w-12 h-12 rounded-full flex items-center justify-center mr-4">
-                            <i class="fas fa-user text-indigo-600"></i>
-                        </div>
-                        <div>
-                            <h4 class="font-medium">Ali Valiyev</h4>
-                            <div class="flex text-yellow-400">
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                            </div>
-                        </div>
-                    </div>
-                    <p class="text-gray-700">"Ajoyib xizmat! Buyurtmam ertasi kuni yetib keldi. Mahsulot sifatli va narxi ham arzon. Tashakkur!"</p>
-                </div>
-                <div class="bg-white p-6 rounded-lg shadow-md">
-                    <div class="flex items-center mb-4">
-                        <div class="bg-indigo-100 w-12 h-12 rounded-full flex items-center justify-center mr-4">
-                            <i class="fas fa-user text-indigo-600"></i>
-                        </div>
-                        <div>
-                            <h4 class="font-medium">Dilfuza Rahimova</h4>
-                            <div class="flex text-yellow-400">
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star-half-alt"></i>
-                            </div>
-                        </div>
-                    </div>
-                    <p class="text-gray-700">"Do'kon juda qulay va mahsulotlar turlicha. Har doim kerakli narsalarni topish mumkin. Yetkazib berish ham juda tez."</p>
-                </div>
-                <div class="bg-white p-6 rounded-lg shadow-md">
-                    <div class="flex items-center mb-4">
-                        <div class="bg-indigo-100 w-12 h-12 rounded-full flex items-center justify-center mr-4">
-                            <i class="fas fa-user text-indigo-600"></i>
-                        </div>
-                        <div>
-                            <h4 class="font-medium">Shoxruh Qodirov</h4>
-                            <div class="flex text-yellow-400">
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                            </div>
-                        </div>
-                    </div>
-                    <p class="text-gray-700">"Elektronika bo'limidagi mahsulotlar juda sifatli va kafolatli. Xarid qilishdan oldin maslahat berishadi, bu juda yoqdi."</p>
-                </div>
-            </div>
-        </div>
-    </section>
+            setupEventListeners() {
+                document.getElementById('newGame').addEventListener('click', () => this.newGame());
+                document.getElementById('undoMove').addEventListener('click', () => this.undoMove());
+                document.getElementById('resign').addEventListener('click', () => this.resign());
+                
+                this.board.addEventListener('click', (e) => {
+                    if (e.target.classList.contains('square')) {
+                        this.handleSquareClick(e.target);
+                    }
+                });
+            }
 
-    <!-- Registration Section -->
-    <section id="register" class="py-16 bg-indigo-600 text-white">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="md:flex items-center justify-between">
-                <div class="md:w-1/2 mb-10 md:mb-0">
-                    <h2 class="text-3xl font-bold mb-4">A'zo Bo'ling</h2>
-                    <p class="text-xl mb-6">Ro'yxatdan o'ting va birinchi buyurtmangiz uchun 10% chegirmaga ega bo'ling!</p>
-                    <div class="flex space-x-4">
-                        <a href="#" class="bg-white text-indigo-600 px-6 py-3 rounded-md font-medium hover:bg-gray-100 transition">
-                            <i class="fab fa-google mr-2"></i> Google bilan
-                        </a>
-                        <a href="#" class="bg-blue-600 text-white px-6 py-3 rounded-md font-medium hover:bg-blue-700 transition">
-                            <i class="fab fa-facebook mr-2"></i> Facebook bilan
-                        </a>
-                    </div>
-                </div>
-                <div class="md:w-1/2 md:pl-12">
-                    <form id="registration-form" class="bg-white rounded-lg shadow-xl p-6 text-gray-800">
-                        <h3 class="text-2xl font-bold mb-6 text-center">Ro'yxatdan O'tish</h3>
-                        <div class="mb-4">
-                            <label for="name" class="block text-gray-700 mb-2">Ism</label>
-                            <input type="text" id="name" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                        </div>
-                        <div class="mb-4">
-                            <label for="email" class="block text-gray-700 mb-2">Email</label>
-                            <input type="email" id="email" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                        </div>
-                        <div class="mb-4">
-                            <label for="phone" class="block text-gray-700 mb-2">Telefon</label>
-                            <input type="tel" id="phone" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                        </div>
-                        <div class="mb-6">
-                            <label for="password" class="block text-gray-700 mb-2">Parol</label>
-                            <input type="password" id="password" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                        </div>
-                        <button type="submit" class="w-full bg-indigo-600 text-white py-3 rounded-md font-medium hover:bg-indigo-700 transition">Ro'yxatdan O'tish</button>
-                        <p class="text-center mt-4">Akkountingiz bormi? <a href="#" id="login-link" class="text-indigo-600 hover:underline">Kirish</a></p>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </section>
+            handleSquareClick(square) {
+                if (!this.gameActive) return;
 
-    <!-- Contact Section -->
-    <section id="contact" class="py-16 bg-white">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 class="text-3xl font-bold text-center mb-12">Aloqa</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
-                <div>
-                    <h3 class="text-2xl font-bold mb-6">Biz Bilan Bog'laning</h3>
-                    <div class="space-y-6">
-                        <div class="flex items-start">
-                            <div class="bg-indigo-100 p-3 rounded-full mr-4">
-                                <i class="fas fa-map-marker-alt text-indigo-600"></i>
-                            </div>
-                            <div>
-                                <h4 class="font-medium text-lg">Manzil</h4>
-                                <p class="text-gray-700">Toshkent shahri, Yunusobod tumani, 12-uy</p>
-                            </div>
-                        </div>
-                        <div class="flex items-start">
-                            <div class="bg-indigo-100 p-3 rounded-full mr-4">
-                                <i class="fas fa-phone-alt text-indigo-600"></i>
-                            </div>
-                            <div>
-                                <h4 class="font-medium text-lg">Telefon</h4>
-                                <p class="text-gray-700">+998 71 123 45 67</p>
-                                <p class="text-gray-700">+998 90 123 45 67</p>
-                            </div>
-                        </div>
-                        <div class="flex items-start">
-                            <div class="bg-indigo-100 p-3 rounded-full mr-4">
-                                <i class="fas fa-envelope text-indigo-600"></i>
-                            </div>
-                            <div>
-                                <h4 class="font-medium text-lg">Email</h4>
-                                <p class="text-gray-700">info@bizningdokon.uz</p>
-                                <p class="text-gray-700">support@bizningdokon.uz</p>
-                            </div>
-                        </div>
-                        <div c
+                const row = parseInt(square.dataset.row);
+                const col = parseInt(square.dataset.col);
+
+                if (this.selectedSquare) {
+                    if (square.classList.contains('selected')) {
+                        this.clearSelection();
+                    } else if (square.classList.contains('valid-move')) {
+                        this.makeMove(this.selectedSquare, square);
+                    } else {
+                        this.clearSelection();
+                        this.selectSquare(square);
+                    }
+                } else {
+                    this.selectSquare(square);
+                }
+            }
+
+            selectSquare(square) {
+                const piece = square.textContent;
+                if (!piece) return;
+
+                // Oddiy logika: faqat joriy o'yinchi o'z figurasini tanlashi mumkin
+                const isWhitePiece = piece === piece.toUpperCase() && piece !== '';
+                if ((this.currentPlayer === 'white' && isWhitePiece) || 
+                    (this.currentPlayer === 'black' && !isWhitePiece)) {
+                    this.selectedSquare = square;
+                    square.classList.add('selected');
+                    this.showValidMoves(square);
+                }
+            }
+
+            showValidMoves(square) {
+                // Oddiy logika: figuralar bir katak yuradi
+                const row = parseInt(square.dataset.row);
+                const col = parseInt(square.dataset.col);
+                
+                for (let r = Math.max(0, row - 1); r <= Math.min(7, row + 1); r++) {
+                    for (let c = Math.max(0, col - 1); c <= Math.min(7, col + 1); c++) {
+                        if (r !== row || c !== col) {
+                            const targetSquare = document.querySelector(`[data-row="${r}"][data-col="${c}"]`);
+                            if (targetSquare && !targetSquare.textContent) {
+                                targetSquare.classList.add('valid-move');
+                            }
+                        }
+                    }
+                }
+            }
+
+            clearSelection() {
+                if (this.selectedSquare) {
+                    this.selectedSquare.classList.remove('selected');
+                    this.selectedSquare = null;
+                }
+                document.querySelectorAll('.valid-move').forEach(square => {
+                    square.classList.remove('valid-move');
+                });
+            }
+
+            makeMove(fromSquare, toSquare) {
+                toSquare.textContent = fromSquare.textContent;
+                fromSquare.textContent = '';
+                this.clearSelection();
+                this.switchPlayer();
+                this.updateStatus();
+            }
+
+            switchPlayer() {
+                this.currentPlayer = this.currentPlayer === 'white' ? 'black' : 'white';
+                this.updatePlayerIndicators();
+            }
+
+            updatePlayerIndicators() {
+                const player1 = document.getElementById('player1');
+                const player2 = document.getElementById('player2');
+                
+                if (this.currentPlayer === 'white') {
+                    player1.classList.add('active');
+                    player2.classList.remove('active');
+                } else {
+                    player1.classList.remove('active');
+                    player2.classList.add('active');
+                }
+            }
+
+            updateStatus() {
+                const playerNames = {
+                    'white': 'Oq',
+                    'black': 'Qora'
+                };
+                this.status.textContent = `O'yin davom etmoqda... ${playerNames[this.currentPlayer]} yuradi`;
+            }
+
+            newGame() {
+                this.initializeBoard();
+                this.currentPlayer = 'white';
+                this.gameActive = true;
+                this.clearSelection();
+                this.updatePlayerIndicators();
+                this.updateStatus();
+                this.status.textContent = "Yangi o'yin boshlandi! Oq yuradi";
+            }
+
+            undoMove() {
+                // Bu yerda ortga qaytarish logikasi bo'lishi kerak
+                this.status.textContent = "Ortga qaytarish funksiyasi hozircha mavjud emas";
+            }
+
+            resign() {
+                const winner = this.currentPlayer === 'white' ? 'Qora' : 'Oq';
+                this.status.textContent = `Taslim bo'ldingiz! G'olib: ${winner}`;
+                this.gameActive = false;
+            }
+        }
+
+        // O'yinni boshlash
+        document.addEventListener('DOMContentLoaded', () => {
+            new ChessGame();
+        });
+    </script>
+</body>
+</html>
