@@ -3,139 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Universal Market | Admin Direct</title>
+    <title>Universal Shop | Fix</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        .product-card { border-radius: 15px; overflow: hidden; background: white; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
-        .upload-area { border: 2px dashed #cbd5e1; padding: 20px; text-align: center; cursor: pointer; border-radius: 12px; }
-        .hidden-input { display: none; }
+        .product-card { border-radius: 12px; overflow: hidden; background: white; border: 1px solid #eee; transition: 0.3s; }
+        .product-card:hover { transform: translateY(-5px); box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); }
+        .glass { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); }
+        #preview-container img { max-height: 200px; width: 100%; object-fit: cover; border-radius: 10px; }
     </style>
 </head>
-<body class="bg-gray-100 pb-20">
+<body class="bg-gray-50 pb-20">
 
-    <nav class="bg-white border-b p-4 sticky top-0 z-50 flex justify-between items-center">
-        <h1 class="text-xl font-bold tracking-tight text-indigo-600 italic underline">BOZOR.UZ</h1>
-        <button onclick="openAdmin()" class="text-gray-400"><i class="fas fa-lock text-xs"></i></button>
+    <nav class="glass sticky top-0 z-50 border-b px-6 py-4 flex justify-between items-center">
+        <h1 class="font-bold text-xl text-indigo-700">UNIMARKET</h1>
+        <div class="flex items-center gap-4">
+            <button onclick="openAdmin()" class="text-gray-400 hover:text-indigo-600"><i class="fas fa-plus-circle text-xl"></i></button>
+            <button onclick="toggleCart()" class="relative p-2 bg-indigo-600 text-white rounded-full">
+                <i class="fas fa-shopping-cart"></i>
+                <span id="cart-count" class="absolute -top-1 -right-1 bg-red-500 text-[10px] w-5 h-5 flex items-center justify-center rounded-full">0</span>
+            </button>
+        </div>
     </nav>
 
-    <div id="admin-modal" class="fixed inset-0 bg-black/80 z-[100] hidden flex items-center justify-center p-4">
-        <div class="bg-white w-full max-w-md rounded-3xl p-6 relative">
-            <button onclick="closeAdmin()" class="absolute top-4 right-4 text-2xl">&times;</button>
-            <h2 class="text-xl font-bold mb-6">Yangi mahsulot qo'shish</h2>
-            
-            <div class="space-y-4">
-                <div class="upload-area" onclick="document.getElementById('file-input').click()">
-                    <i class="fas fa-camera text-3xl text-gray-400 mb-2"></i>
-                    <p class="text-sm text-gray-500" id="upload-status">Rasmni tanlang yoki suratga oling</p>
-                    <img id="preview" class="hidden w-full h-40 object-cover rounded-lg mt-2">
-                </div>
-                <input type="file" id="file-input" class="hidden-input" accept="image/*" onchange="previewImage(event)">
-
-                <input type="text" id="p-name" placeholder="Mahsulot nomi (masalan: Atr Versace)" class="w-full p-3 border rounded-xl outline-none focus:ring-2 ring-indigo-500">
-                <input type="number" id="p-price" placeholder="Narxi (so'm)" class="w-full p-3 border rounded-xl outline-none focus:ring-2 ring-indigo-500">
-                
-                <button id="save-btn" onclick="uploadAndSave()" class="w-full bg-indigo-600 text-white py-4 rounded-2xl font-bold text-lg active:scale-95 transition">
-                    Instagram uslubida yuklash
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <main class="max-w-7xl mx-auto px-3 py-6">
-        <div id="product-grid" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-3">
-            </div>
-    </main>
-
-    <div class="fixed bottom-5 right-5 z-40">
-        <button class="bg-indigo-600 text-white w-16 h-16 rounded-full shadow-2xl flex items-center justify-center relative">
-            <i class="fas fa-shopping-cart text-xl"></i>
-            <span id="cart-count" class="absolute top-2 right-2 bg-red-500 text-[10px] w-5 h-5 rounded-full flex items-center justify-center">0</span>
-        </button>
-    </div>
-
-    <script>
-        let products = JSON.parse(localStorage.getItem('instaProducts')) || [];
-        let selectedFile = null;
-
-        function openAdmin() {
-            let pass = prompt("Admin parolini kiriting:");
-            if(pass === "0000") document.getElementById('admin-modal').classList.remove('hidden');
-        }
-
-        function closeAdmin() {
-            document.getElementById('admin-modal').classList.add('hidden');
-        }
-
-        function previewImage(event) {
-            const reader = new FileReader();
-            reader.onload = function() {
-                const preview = document.getElementById('preview');
-                preview.src = reader.result;
-                preview.classList.remove('hidden');
-                document.getElementById('upload-status').innerText = "Rasm tanlandi";
-            }
-            reader.readAsDataURL(event.target.files[0]);
-            selectedFile = event.target.files[0];
-        }
-
-        async function uploadAndSave() {
-            if(!selectedFile || !document.getElementById('p-name').value) {
-                alert("Ma'lumotlarni to'liq kiriting!");
-                return;
-            }
-
-            const btn = document.getElementById('save-btn');
-            btn.innerText = "Yuklanmoqda...";
-            btn.disabled = true;
-
-            // Cloudinary-ga yuklash (Bu yerda men siz uchun vaqtincha demo account ishlatdim)
-            const formData = new FormData();
-            formData.append('file', selectedFile);
-            formData.append('upload_preset', 'ml_default'); // Cloudinary sozlami
-
-            try {
-                const res = await fetch('https://api.cloudinary.com/v1_1/demo/image/upload', {
-                    method: 'POST',
-                    body: formData
-                });
-                const data = await res.json();
-                
-                const newProduct = {
-                    id: Date.now(),
-                    name: document.getElementById('p-name').value,
-                    price: parseInt(document.getElementById('p-price').value),
-                    img: data.secure_url
-                };
-
-                products.unshift(newProduct);
-                localStorage.setItem('instaProducts', JSON.stringify(products));
-                render();
-                closeAdmin();
-                alert("Muvaffaqiyatli qo'shildi!");
-            } catch (err) {
-                alert("Yuklashda xato bo'ldi. Internetni tekshiring.");
-            } finally {
-                btn.innerText = "Instagram uslubida yuklash";
-                btn.disabled = false;
-            }
-        }
-
-        function render() {
-            const grid = document.getElementById('product-grid');
-            grid.innerHTML = products.map(p => `
-                <div class="product-card">
-                    <img src="${p.img}" class="w-full h-48 object-cover">
-                    <div class="p-3">
-                        <h3 class="font-semibold text-sm truncate">${p.name}</h3>
-                        <p class="text-indigo-600 font-bold mt-1">${p.price.toLocaleString()} so'm</p>
-                        <button class="w-full mt-3 py-2 bg-indigo-50 text-indigo-600 rounded-lg text-xs font-bold uppercase tracking-wider">Savatga</button>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        render();
-    </script>
-</body>
-</html>
+    <div id="admin-modal" class="fixed inset-0 bg-black/70 z-[100] hidden flex items-center justify-center p-4">
+        <div class="bg-white w-full max-w-md rounded-2xl p-6">
+            <div class="flex justify-between mb-4">
+                <h2 class="text-lg font-bold">Mahsulot qo'shish</h2>
+                <button onclick="closeAdmin()" class="text-2xl">&
