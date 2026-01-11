@@ -3,145 +3,136 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Universal Shop & Admin</title>
+    <title>Universal Market | Admin Direct</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700&display=swap');
-        body { font-family: 'Plus Jakarta Sans', sans-serif; }
-        .product-card { transition: 0.3s; border: 1px solid #eee; }
-        .admin-only { display: none; } /* Faqat admin kirganda ko'rinadi */
-        .glass { background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(10px); }
+        .product-card { border-radius: 15px; overflow: hidden; background: white; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
+        .upload-area { border: 2px dashed #cbd5e1; padding: 20px; text-align: center; cursor: pointer; border-radius: 12px; }
+        .hidden-input { display: none; }
     </style>
 </head>
-<body class="bg-gray-50">
+<body class="bg-gray-100 pb-20">
 
-    <nav class="glass sticky top-0 z-40 border-b px-6 py-4 flex justify-between items-center">
-        <h1 class="font-bold text-xl tracking-tighter">UNIMARKET</h1>
-        <div class="flex items-center gap-4">
-            <button onclick="loginAdmin()" class="text-gray-400 hover:text-gray-600 text-xs">Admin</button>
-            <button onclick="toggleCart()" class="p-2 bg-black text-white rounded-full h-10 w-10 flex items-center justify-center relative">
-                <i class="fas fa-shopping-cart"></i>
-                <span id="cart-count" class="absolute -top-1 -right-1 bg-red-500 text-[10px] w-4 h-4 rounded-full flex items-center justify-center">0</span>
-            </button>
-        </div>
+    <nav class="bg-white border-b p-4 sticky top-0 z-50 flex justify-between items-center">
+        <h1 class="text-xl font-bold tracking-tight text-indigo-600 italic underline">BOZOR.UZ</h1>
+        <button onclick="openAdmin()" class="text-gray-400"><i class="fas fa-lock text-xs"></i></button>
     </nav>
 
-    <div id="admin-panel" class="admin-only bg-indigo-50 p-6 border-b">
-        <div class="max-w-4xl mx-auto">
-            <h2 class="font-bold mb-4 flex items-center gap-2"><i class="fas fa-user-shield"></i> Yangi mahsulot qo'shish</h2>
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-                <input type="text" id="p-name" placeholder="Mahsulot nomi" class="p-2 border rounded">
-                <input type="text" id="p-img" placeholder="Rasm linki (URL)" class="p-2 border rounded">
-                <input type="number" id="p-price" placeholder="Narxi (so'm)" class="p-2 border rounded">
-                <button onclick="addProduct()" class="bg-indigo-600 text-white p-2 rounded font-bold">Qo'shish</button>
+    <div id="admin-modal" class="fixed inset-0 bg-black/80 z-[100] hidden flex items-center justify-center p-4">
+        <div class="bg-white w-full max-w-md rounded-3xl p-6 relative">
+            <button onclick="closeAdmin()" class="absolute top-4 right-4 text-2xl">&times;</button>
+            <h2 class="text-xl font-bold mb-6">Yangi mahsulot qo'shish</h2>
+            
+            <div class="space-y-4">
+                <div class="upload-area" onclick="document.getElementById('file-input').click()">
+                    <i class="fas fa-camera text-3xl text-gray-400 mb-2"></i>
+                    <p class="text-sm text-gray-500" id="upload-status">Rasmni tanlang yoki suratga oling</p>
+                    <img id="preview" class="hidden w-full h-40 object-cover rounded-lg mt-2">
+                </div>
+                <input type="file" id="file-input" class="hidden-input" accept="image/*" onchange="previewImage(event)">
+
+                <input type="text" id="p-name" placeholder="Mahsulot nomi (masalan: Atr Versace)" class="w-full p-3 border rounded-xl outline-none focus:ring-2 ring-indigo-500">
+                <input type="number" id="p-price" placeholder="Narxi (so'm)" class="w-full p-3 border rounded-xl outline-none focus:ring-2 ring-indigo-500">
+                
+                <button id="save-btn" onclick="uploadAndSave()" class="w-full bg-indigo-600 text-white py-4 rounded-2xl font-bold text-lg active:scale-95 transition">
+                    Instagram uslubida yuklash
+                </button>
             </div>
-            <button onclick="logoutAdmin()" class="mt-4 text-red-500 text-sm underline">Adminlikdan chiqish</button>
         </div>
     </div>
 
-    <main class="max-w-7xl mx-auto px-4 py-10">
-        <div id="product-grid" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+    <main class="max-w-7xl mx-auto px-3 py-6">
+        <div id="product-grid" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-3">
             </div>
     </main>
 
-    <div id="cart-modal" class="fixed inset-0 bg-black/50 hidden z-50 flex justify-end">
-        <div class="bg-white w-full max-w-sm p-6 overflow-y-auto">
-            <div class="flex justify-between items-center mb-6">
-                <h2 class="text-2xl font-bold">Savatcha</h2>
-                <button onclick="toggleCart()" class="text-2xl">&times;</button>
-            </div>
-            <div id="cart-items" class="space-y-4"></div>
-            <div class="mt-10 border-t pt-4">
-                <p class="text-xl font-bold mb-4">Jami: <span id="cart-total">0</span> so'm</p>
-                <button class="w-full bg-green-500 text-white py-3 rounded-xl font-bold">Buyurtma berish</button>
-            </div>
-        </div>
+    <div class="fixed bottom-5 right-5 z-40">
+        <button class="bg-indigo-600 text-white w-16 h-16 rounded-full shadow-2xl flex items-center justify-center relative">
+            <i class="fas fa-shopping-cart text-xl"></i>
+            <span id="cart-count" class="absolute top-2 right-2 bg-red-500 text-[10px] w-5 h-5 rounded-full flex items-center justify-center">0</span>
+        </button>
     </div>
 
     <script>
-        // Mahsulotlar bazasi (Agar xotirada bo'lsa o'shani oladi, bo'lmasa bo'sh)
-        let products = JSON.parse(localStorage.getItem('myProducts')) || [
-            { id: 1, name: "Premium Atr", price: 250000, img: "https://images.unsplash.com/photo-1594035910387-fea47794261f?w=300" },
-            { id: 2, name: "Yumshoq Sochiq", price: 45000, img: "https://images.unsplash.com/photo-1616627561839-074385244d0a?w=300" }
-        ];
+        let products = JSON.parse(localStorage.getItem('instaProducts')) || [];
+        let selectedFile = null;
 
-        let cart = [];
-
-        // Admin kirish funksiyasi
-        function loginAdmin() {
+        function openAdmin() {
             let pass = prompt("Admin parolini kiriting:");
-            if (pass === "1234") { // Parolni o'zingizga moslang
-                document.getElementById('admin-panel').style.display = 'block';
-                localStorage.setItem('isAdmin', 'true');
-            } else {
-                alert("Parol xato!");
+            if(pass === "0000") document.getElementById('admin-modal').classList.remove('hidden');
+        }
+
+        function closeAdmin() {
+            document.getElementById('admin-modal').classList.add('hidden');
+        }
+
+        function previewImage(event) {
+            const reader = new FileReader();
+            reader.onload = function() {
+                const preview = document.getElementById('preview');
+                preview.src = reader.result;
+                preview.classList.remove('hidden');
+                document.getElementById('upload-status').innerText = "Rasm tanlandi";
             }
+            reader.readAsDataURL(event.target.files[0]);
+            selectedFile = event.target.files[0];
         }
 
-        function logoutAdmin() {
-            document.getElementById('admin-panel').style.display = 'none';
-            localStorage.removeItem('isAdmin');
-        }
+        async function uploadAndSave() {
+            if(!selectedFile || !document.getElementById('p-name').value) {
+                alert("Ma'lumotlarni to'liq kiriting!");
+                return;
+            }
 
-        // Mahsulot qo'shish
-        function addProduct() {
-            const name = document.getElementById('p-name').value;
-            const img = document.getElementById('p-img').value;
-            const price = document.getElementById('p-price').value;
+            const btn = document.getElementById('save-btn');
+            btn.innerText = "Yuklanmoqda...";
+            btn.disabled = true;
 
-            if(name && img && price) {
-                const newP = {
+            // Cloudinary-ga yuklash (Bu yerda men siz uchun vaqtincha demo account ishlatdim)
+            const formData = new FormData();
+            formData.append('file', selectedFile);
+            formData.append('upload_preset', 'ml_default'); // Cloudinary sozlami
+
+            try {
+                const res = await fetch('https://api.cloudinary.com/v1_1/demo/image/upload', {
+                    method: 'POST',
+                    body: formData
+                });
+                const data = await res.json();
+                
+                const newProduct = {
                     id: Date.now(),
-                    name: name,
-                    price: parseInt(price),
-                    img: img
+                    name: document.getElementById('p-name').value,
+                    price: parseInt(document.getElementById('p-price').value),
+                    img: data.secure_url
                 };
-                products.push(newP);
-                localStorage.setItem('myProducts', JSON.stringify(products));
+
+                products.unshift(newProduct);
+                localStorage.setItem('instaProducts', JSON.stringify(products));
                 render();
-                alert("Mahsulot qo'shildi!");
+                closeAdmin();
+                alert("Muvaffaqiyatli qo'shildi!");
+            } catch (err) {
+                alert("Yuklashda xato bo'ldi. Internetni tekshiring.");
+            } finally {
+                btn.innerText = "Instagram uslubida yuklash";
+                btn.disabled = false;
             }
         }
 
         function render() {
             const grid = document.getElementById('product-grid');
             grid.innerHTML = products.map(p => `
-                <div class="product-card bg-white p-3 rounded-xl">
-                    <img src="${p.img}" class="w-full h-32 object-cover rounded-lg mb-2">
-                    <h3 class="text-xs font-bold truncate">${p.name}</h3>
-                    <p class="text-indigo-600 font-bold text-sm">${p.price.toLocaleString()} so'm</p>
-                    <button onclick="addToCart(${p.id})" class="mt-2 w-full text-[10px] bg-gray-100 py-1 rounded hover:bg-black hover:text-white transition">+ SAVATCHA</button>
+                <div class="product-card">
+                    <img src="${p.img}" class="w-full h-48 object-cover">
+                    <div class="p-3">
+                        <h3 class="font-semibold text-sm truncate">${p.name}</h3>
+                        <p class="text-indigo-600 font-bold mt-1">${p.price.toLocaleString()} so'm</p>
+                        <button class="w-full mt-3 py-2 bg-indigo-50 text-indigo-600 rounded-lg text-xs font-bold uppercase tracking-wider">Savatga</button>
+                    </div>
                 </div>
             `).join('');
-        }
-
-        // Savatcha funksiyalari
-        function addToCart(id) {
-            const p = products.find(x => x.id === id);
-            cart.push(p);
-            updateCart();
-        }
-
-        function updateCart() {
-            document.getElementById('cart-count').innerText = cart.length;
-            const list = document.getElementById('cart-items');
-            list.innerHTML = cart.map(item => `
-                <div class="flex justify-between items-center text-sm border-b pb-2">
-                    <span>${item.name}</span>
-                    <span class="font-bold">${item.price.toLocaleString()} so'm</span>
-                </div>
-            `).join('');
-            document.getElementById('cart-total').innerText = cart.reduce((a, b) => a + b.price, 0).toLocaleString();
-        }
-
-        function toggleCart() {
-            document.getElementById('cart-modal').classList.toggle('hidden');
-        }
-
-        // Sayt yuklanganda tekshirish
-        if(localStorage.getItem('isAdmin') === 'true') {
-            document.getElementById('admin-panel').style.display = 'block';
         }
 
         render();
