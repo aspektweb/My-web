@@ -3,166 +3,82 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Natural Wonders | Premium Feed</title>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;600;800&display=swap" rel="stylesheet">
+    
+    <title>Natural Wonders | Explore Now</title>
+    <meta property="og:title" content="Natural Wonders 🌍">
+    <meta property="og:description" content="Dunyoning eng go'zal burchaklari. Bizga qo'shiling!">
+    <meta property="og:image" content="https://images.unsplash.com/photo-1501854140801-50d01698950b?w=800">
+    <meta property="og:type" content="website">
+
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;900&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --accent: #38bdf8;
-            --bg: #020617;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body, html { height: 100%; font-family: 'Montserrat', sans-serif; background: #000; overflow: hidden; }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-
-        body {
-            font-family: 'Outfit', sans-serif;
-            background: var(--bg);
-            color: white;
-            overflow-x: hidden;
-        }
-
-        /* Orqa fon dizayni */
-        .fixed-bg {
+        .bg-video {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(to bottom, rgba(2, 6, 23, 0.8), rgba(2, 6, 23, 0.9)),
-                        url('https://images.unsplash.com/photo-1469474968028-56623f02e42e?auto=format&fit=crop&q=80&w=2074');
-            background-size: cover;
-            background-position: center;
             z-index: -1;
+            object-fit: cover;
+            filter: brightness(0.4);
         }
 
-        header {
-            height: 50vh;
+        .container {
+            height: 100%;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             text-align: center;
-        }
-
-        h1 {
-            font-size: clamp(2.5rem, 10vw, 5rem);
-            font-weight: 800;
-            letter-spacing: -2px;
-            background: linear-gradient(to bottom, #fff, #94a3b8);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .channel-link {
-            margin-top: 20px;
-            color: var(--accent);
-            text-decoration: none;
-            border: 1px solid var(--accent);
-            padding: 10px 25px;
-            border-radius: 100px;
-            transition: 0.3s;
-        }
-
-        .channel-link:hover {
-            background: var(--accent);
-            color: var(--bg);
-        }
-
-        /* Postlar Galereyasi */
-        .feed-container {
-            max-width: 650px;
-            margin: 0 auto;
+            color: #fff;
             padding: 20px;
         }
 
-        .post-card {
-            background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(20px);
-            border-radius: 24px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            margin-bottom: 30px;
-            min-height: 200px;
-            opacity: 0;
-            transform: translateY(30px);
-            transition: 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+        h1 {
+            font-size: clamp(2.5rem, 12vw, 5rem);
+            font-weight: 900;
+            letter-spacing: 5px;
+            margin-bottom: 20px;
+            text-transform: uppercase;
         }
 
-        .post-card.visible {
-            opacity: 1;
-            transform: translateY(0);
+        .main-btn {
+            display: inline-block;
+            background: #24A1DE;
+            color: #fff;
+            padding: 22px 60px;
+            font-size: 1.4rem;
+            font-weight: 900;
+            text-decoration: none;
+            border-radius: 100px;
+            box-shadow: 0 0 30px rgba(36, 161, 222, 0.5);
+            transition: 0.3s;
+            animation: pulse 2s infinite;
         }
 
-        #status {
-            text-align: center;
-            padding: 40px;
-            opacity: 0.6;
+        .main-btn:hover {
+            transform: scale(1.1);
+            background: #fff;
+            color: #24A1DE;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(36, 161, 222, 0.7); }
+            70% { transform: scale(1.05); box-shadow: 0 0 0 20px rgba(36, 161, 222, 0); }
+            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(36, 161, 222, 0); }
         }
     </style>
 </head>
 <body>
 
-    <div class="fixed-bg"></div>
+    <video autoplay muted loop playsinline class="bg-video">
+        <source src="https://assets.mixkit.co/videos/preview/mixkit-beautiful-landscape-of-mountains-and-lakes-2332-large.mp4" type="video/mp4">
+    </video>
 
-    <header>
+    <div class="container">
         <h1>NATURAL<br>WONDERS</h1>
-        <a href="https://t.me/naturalwonderssss" target="_blank" class="channel-link">@naturalwonderssss</a>
-    </header>
+        <a href="https://t.me/naturalwonderssss" class="main-btn">EXPLORE NOW</a>
+    </div>
 
-    <main class="feed-container" id="main-feed">
-        <div id="status">Botingiz orqali kanal bog'lanmoqda...</div>
-    </main>
-
-    <script>
-        const TOKEN = '8409371971:AAHWVvOJTPfRx4TVKK9-Bwx7KUFa6EDb2ls';
-        const CHANNEL_USER = 'naturalwonderssss';
-        const feed = document.getElementById('main-feed');
-        const status = document.getElementById('status');
-
-        async function getLatestPostId() {
-            try {
-                // Botingiz orqali kanal ma'lumotlarini olish
-                const res = await fetch(`https://api.telegram.org/bot${TOKEN}/getChat?chat_id=@${CHANNEL_USER}`);
-                const data = await res.json();
-                
-                // Telegram Bot API ba'zida to'g'ridan-to'g'ri pinned_message orqali oxirgi IDni beradi
-                // Agar bo'lmasa, biz yuqori raqamdan boshlab pastga qarab skanerlaymiz
-                let startId = 100; // Taxminiy boshlang'ich nuqta
-
-                if(data.ok && data.result.pinned_message) {
-                    startId = data.result.pinned_message.message_id + 10;
-                }
-
-                status.style.display = 'none';
-                loadPosts(startId);
-
-            } catch (err) {
-                status.innerText = "Xatolik: Bot ulanmadi.";
-            }
-        }
-
-        function loadPosts(id) {
-            // Oxirgi 15 ta postni yuklash
-            for (let i = 0; i < 15; i++) {
-                const currentId = id - i;
-                if(currentId <= 0) break;
-
-                const card = document.createElement('div');
-                card.className = 'post-card';
-                
-                const script = document.createElement('script');
-                script.async = true;
-                script.src = "https://telegram.org/js/telegram-widget.js?22";
-                script.setAttribute("data-telegram-post", `${CHANNEL_USER}/${currentId}`);
-                script.setAttribute("data-width", "100%");
-                script.setAttribute("data-userpic", "false");
-                script.setAttribute("data-color", "38bdf8");
-                script.setAttribute("data-dark", "1");
-
-                card.appendChild(script);
-                feed.appendChild(card);
-
-                // Animatsiya effekti
-                setTimeout(() => card.classList.add('visible'), i * 150);
-            }
-        }
-
-        window.onload = getLatestPostId;
-    </script>
 </body>
 </html>
