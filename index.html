@@ -3,134 +3,112 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Natural Wonders | Live Website</title>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700&display=swap" rel="stylesheet">
+    <title>Natural Wonders | Live</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        
         body {
+            margin: 0;
             font-family: 'Montserrat', sans-serif;
             background: #0f172a;
             color: white;
-            min-height: 100vh;
+            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), 
+                        url('https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?auto=format&fit=crop&w=1350&q=80');
+            background-size: cover;
+            background-attachment: fixed;
             display: flex;
             flex-direction: column;
             align-items: center;
         }
 
-        /* Chiroyli fon */
-        .bg-gradient {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), 
-                        url('https://images.unsplash.com/photo-1472214103451-9374bd1c798e?auto=format&fit=crop&q=80&w=2070');
-            background-size: cover;
-            background-position: center;
-            z-index: -1;
-        }
+        header { padding: 50px 20px; text-align: center; }
 
-        header {
-            text-align: center;
-            padding: 60px 20px;
-        }
-
-        h1 { font-size: 2.5rem; letter-spacing: 3px; text-transform: uppercase; }
-        .subtitle { opacity: 0.7; font-style: italic; margin-top: 10px; }
-
-        /* Postlar chiqadigan joy */
-        #feed-container {
-            width: 95%;
-            max-width: 600px;
+        #feed {
+            width: 90%;
+            max-width: 700px;
             display: flex;
             flex-direction: column;
-            gap: 25px;
+            gap: 20px;
             padding-bottom: 50px;
         }
 
         .post-card {
             background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(15px);
-            border-radius: 25px;
-            padding: 15px;
+            backdrop-filter: blur(12px);
+            border-radius: 20px;
+            padding: 20px;
             border: 1px solid rgba(255, 255, 255, 0.2);
-            box-shadow: 0 15px 35px rgba(0,0,0,0.3);
-            transition: 0.3s;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
         }
 
-        .loading-text {
-            text-align: center;
-            font-size: 1.2rem;
-            margin-top: 50px;
+        .post-media img, .post-media video {
+            width: 100%;
+            border-radius: 15px;
+            margin-bottom: 15px;
         }
+
+        .post-text { font-size: 1.1rem; line-height: 1.6; white-space: pre-wrap; }
+        .post-date { font-size: 0.8rem; opacity: 0.5; margin-top: 15px; display: block; }
     </style>
 </head>
 <body>
 
-    <div class="bg-gradient"></div>
-
     <header>
         <h1>Natural Wonders 🌍</h1>
-        <p class="subtitle">Tabiat mo'jizalarini biz bilan kuzating</p>
+        <p>Telegramdan jonli uzatma</p>
     </header>
 
-    <div id="feed-container">
-        <p class="loading-text" id="status">Kanal xabarlari yuklanmoqda...</p>
+    <div id="feed">
+        <p id="status" style="text-align: center;">Xabarlar tekshirilmoqda...</p>
     </div>
 
     <script>
-        // --- SOZLAMALAR ---
-        const BOT_TOKEN = '7953904277:AAFbjWRogxUYPv50ooU1RVcZCUbuaixuqgs'; // BotFather bergan API tokenni shu yerga qo'ying
-        const CHANNEL_USER = 'naturalwonderss'; // Kanalingizning @ belgisiz nomi
+        // 1. TOKENNI SHU YERGA QO'YING
+        const TOKEN = '8409371971:AAHWVvOJTPfRx4TVKK9-Bwx7KUFa6EDb2ls'; 
+        // 2. KANAL ID (Masalan @naturalwonderss)
+        const CHAT_ID = '@naturalwonderss'; 
 
-        async function loadLatestPosts() {
+        async function fetchTelegram() {
             try {
-                // 1. Bot orqali kanaldagi so'nggi xabarni aniqlaymiz
-                // Telegram Bot API orqali kanaldagi eng oxirgi xabarlar ID sini olish
-                const response = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/getUpdates`);
+                // getUpdates faqat yangi xabarlarni ko'radi
+                const response = await fetch(`https://api.telegram.org/bot${TOKEN}/getUpdates?offset=-10`);
                 const data = await response.json();
                 
-                const container = document.getElementById('feed-container');
-                const statusText = document.getElementById('status');
-                
-                // Botga xabar kelgan bo'lsa yoki kanalga admin bo'lsa, oxirgi ID ni taxminan olamiz
-                // Telegram vidjeti uchun bizga ID kerak. 
-                // Eng oson yo'li: oxirgi 5 ta xabarni chiqarish
-                
-                statusText.style.display = 'none';
-                
-                // Oxirgi 10 ta postni chiqarishga harakat qilamiz
-                // Eslatma: Telegram vidjetida post ID-si kerak bo'ladi.
-                // Biz hozircha taxminiy oxirgi 10 ta postni chiqaramiz.
-                
-                let startID = 30; // Bu yerga kanalingizdagi hozirgi taxminiy oxirgi xabar raqamini yozing (masalan 22)
+                const feed = document.getElementById('feed');
+                const status = document.getElementById('status');
 
-                for (let i = 0; i < 10; i++) {
-                    let currentID = startID - i;
-                    if (currentID <= 0) break;
+                if (data.ok && data.result.length > 0) {
+                    status.style.display = 'none';
+                    
+                    // Xabarlarni teskari tartibda chiqarish (eng yangisi tepada)
+                    data.result.reverse().forEach(update => {
+                        const msg = update.channel_post || update.message;
+                        if (!msg || msg.chat.username !== 'naturalwonderss') return;
 
-                    const postDiv = document.createElement('div');
-                    postDiv.className = 'post-card';
-                    
-                    const script = document.createElement('script');
-                    script.async = true;
-                    script.src = "https://telegram.org/js/telegram-widget.js?22";
-                    script.setAttribute("data-telegram-post", `${CHANNEL_USER}/${currentID}`);
-                    script.setAttribute("data-width", "100%");
-                    script.setAttribute("data-userpic", "true");
-                    script.setAttribute("data-color", "29B6F6");
-                    
-                    postDiv.appendChild(script);
-                    container.appendChild(postDiv);
+                        const card = document.createElement('div');
+                        card.className = 'post-card';
+
+                        let content = '';
+                        // Matnni olish
+                        let text = msg.text || msg.caption || "";
+                        
+                        // Vaqtni formatlash
+                        let date = new Date(msg.date * 1000).toLocaleString();
+
+                        card.innerHTML = `
+                            <div class="post-text">${text}</div>
+                            <span class="post-date">${date}</span>
+                        `;
+                        feed.appendChild(card);
+                    });
+                } else {
+                    status.innerText = "Hozircha yangi xabarlar yo'q. Kanalga xabar yuboring!";
                 }
-
-            } catch (error) {
-                console.error("Xatolik:", error);
-                document.getElementById('status').innerText = "Xabarlarni yuklab bo'lmadi.";
+            } catch (err) {
+                status.innerText = "Xatolik: Bot ulanmadi yoki Token noto'g'ri.";
             }
         }
 
-        // Ishga tushirish
-        loadLatestPosts();
+        fetchTelegram();
     </script>
 </body>
 </html>
