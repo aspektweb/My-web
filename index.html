@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Virus Interaktiv Viewer (1080p HD)</title>
+    <style>
+        body { margin: 0; background: radial-gradient(circle, #0d1b2a, #000); overflow: hidden; font-family: 'Segoe UI', sans-serif; }
+        #info {
+            position: absolute; top: 20px; left: 20px; color: #00ffcc;
+            pointer-events: none; text-shadow: 0 0 10px #00ffcc;
+        }
+        .controls-hint {
+            position: absolute; bottom: 20px; width: 100%; text-align: center;
+            color: rgba(255,255,255,0.5); font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="info">
+        <h1>VIRUS 3D MODEL</h1>
+        <p>Holati: Aktiv | Sifati: 1080p HD</p>
+    </div>
+    
+    <div class="controls-hint">Sichqoncha bilan aylantiring | Kattalashtirish uchun "Scroll" qiling</div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+
+    <script>
+        // 1. Sahna va Kamera sozlamalari
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(window.devicePixelRatio);
+        document.body.appendChild(renderer.domElement);
+
+        // 2. Virus tanasini yaratish (Yadro)
+        const coreGeometry = new THREE.IcosahedronGeometry(2, 5);
+        const coreMaterial = new THREE.MeshPhongMaterial({
+            color: 0x3a0ca3,
+            shininess: 100,
+            flatShading: false,
+            wireframe: false
+        });
+        const virus = new THREE.Mesh(coreGeometry, coreMaterial);
+        scene.add(virus);
+
+        // 3. Virus tikanaklari (Spikes)
+        function createSpike() {
+            const group = new THREE.Group();
+            const stemGeom = new THREE.CylinderGeometry(0.05, 0.1, 0.8, 8);
+            const stemMat = new THREE.MeshPhongMaterial({ color: 0x4361ee });
+            const stem = new THREE.Mesh(stemGeom, stemMat);
+            
+            const headGeom = new THREE.SphereGeometry(0.2, 8, 8);
+            const headMat = new THREE.MeshPhongMaterial({ color: 0xf72585 });
+            const head = new THREE.Mesh(headGeom, headMat);
+            head.position.y = 0.4;
+            
+            group.add(stem);
+            group.add(head);
+            return group;
+        }
+
+        // Tikanaklarni yadro yuzasiga joylashtirish
+        for (let i = 0; i < 60; i++) {
+            const spike = createSpike();
+            const phi = Math.acos(-1 + (2 * i) / 60);
+            const theta = Math.sqrt(60 * Math.PI) * phi;
+            
+            spike.position.setFromSphericalCoords(2, phi, theta);
+            spike.lookAt(virus.position);
+            spike.rotateX(Math.PI / 2);
+            virus.add(spike);
+        }
+
+        // 4. Yorug'lik (HD effekt berish uchun)
+        const ambientLight = new THREE.AmbientLight(0x404040, 2);
+        scene.add(ambientLight);
+
+        const pointLight = new THREE.PointLight(0x00ffcc, 2, 50);
+        pointLight.position.set(5, 5, 5);
+        scene.add(pointLight);
+
+        const pinkLight = new THREE.PointLight(0xf72585, 2, 50);
+        pinkLight.position.set(-5, -5, 5);
+        scene.add(pinkLight);
+
+        camera.position.z = 6;
+
+        // 5. OrbitControls (Sichqoncha bilan boshqarish)
+        const controls = new THREE.OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true;
+        controls.dampingFactor = 0.05;
+
+        // 6. Animatsiya va Render
+        function animate() {
+            requestAnimationFrame(animate);
+            
+            // Avtomatik sekin aylanish
+            virus.rotation.y += 0.003;
+            virus.rotation.x += 0.002;
+
+            controls.update();
+            renderer.render(scene, camera);
+        }
+
+        // Oynani o'zgartirganda moslashuv
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        animate();
+    </script>
+</body>
+</html>
