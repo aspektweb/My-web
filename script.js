@@ -2,17 +2,18 @@ const micBtn = document.getElementById('mic-btn');
 const statusText = document.getElementById('status');
 const chatContainer = document.getElementById('chat-container');
 
-// 1. Ovozni aniqlash (Speech Recognition)
-const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-const recognition = new SpeechRecognition();
-recognition.lang = 'en-US'; // Tilni o'rnatish
-recognition.interimResults = false;
-
-// 2. API bilan ishlash (Siz bergan API kod asosi)
+// 1. API Sozlamasi (Kalitingizni shu yerga qo'ying)
 const API_KEY = "SIZNING_API_KALITINGIZ"; 
 
+// 2. Ovozni aniqlash sozlamalari
+const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+const recognition = new SpeechRecognition();
+recognition.lang = 'en-US'; 
+recognition.interimResults = false;
+
+// 3. AI bilan bog'lanish funksiyasi
 async function getAIResponse(userText) {
-    statusText.innerText = "AI o'ylamoqda...";
+    statusText.innerText = "AI is thinking...";
     
     try {
         const response = await fetch("https://api.openai.com/v1/chat/completions", {
@@ -24,8 +25,8 @@ async function getAIResponse(userText) {
             body: JSON.stringify({
                 model: "gpt-3.5-turbo",
                 messages: [
-                    {role: "system", content: "You are a friendly English teacher. Correct grammar mistakes and reply concisely."},
-                    {role: "user", content: userText}
+                    { role: "system", content: "You are an expert English teacher. Correct grammar and reply naturally." },
+                    { role: "user", content: userText }
                 ]
             })
         });
@@ -34,35 +35,35 @@ async function getAIResponse(userText) {
         const aiText = data.choices[0].message.content;
         
         appendMessage('ai', aiText);
-        speakText(aiText); // Javobni ovozli chiqarish
+        speakText(aiText); // AI javobini ovoz chiqarib o'qiydi
+        statusText.innerText = "Ready.";
     } catch (error) {
-        console.error("Xatolik:", error);
-        statusText.innerText = "Xatolik yuz berdi.";
+        console.error("Error:", error);
+        statusText.innerText = "API Error!";
     }
 }
 
-// 3. Ovozli javob qaytarish (Text-to-Speech)
+// 4. AI javobini ovozli o'qish (Text-to-Speech)
 function speakText(text) {
     const utterance = new SpeechSynthesisUtterance(text);
     utterance.lang = 'en-US';
     window.speechSynthesis.speak(utterance);
-    statusText.innerText = "Tayyor.";
 }
 
-// 4. Chat interfeysiga xabar qo'shish
+// 5. Chatga xabar yozish
 function appendMessage(role, text) {
     const div = document.createElement('div');
-    div.className = role === 'user' ? 'user-msg' : 'ai-msg';
-    div.innerText = text;
+    div.className = role;
+    div.innerText = (role === 'user' ? "You: " : "AI: ") + text;
     chatContainer.appendChild(div);
     chatContainer.scrollTop = chatContainer.scrollHeight;
 }
 
-// 5. Hodisalarni boshqarish
+// 6. Tugma bosilganda ishlash
 micBtn.onclick = () => {
     recognition.start();
     micBtn.classList.add('active');
-    statusText.innerText = "Sizni eshityapman...";
+    statusText.innerText = "Listening...";
 };
 
 recognition.onresult = (event) => {
@@ -74,5 +75,5 @@ recognition.onresult = (event) => {
 
 recognition.onerror = () => {
     micBtn.classList.remove('active');
-    statusText.innerText = "Xatolik! Qayta urinib ko'ring.";
+    statusText.innerText = "Error! Try again.";
 };
