@@ -1,3 +1,3 @@
+GEMINI_API_KEY=AIzaSyAdjpKQngqf0MEPfFGoskPd6GiEF-5n4Ks
+PORT=3000
 
-# My-web
-Website
